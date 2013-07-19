@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!ELEMENT service (datasource* | transaction* | sql* | excel* | mail* | servlet* | upload*)*>
+<!-- 프레임웤 XML파일의 DTD 문서 -->
+	<!ELEMENT datasource (property)+>
+	<!ATTLIST datasource
+		id ID #REQUIRED
+		driver CDATA #REQUIRED
+		url CDATA #REQUIRED
+		vendor (oracle | mssql | mysql | db2) #REQUIRED
+		idlesize CDATA #REQUIRED
+		maxsize CDATA #REQUIRED
+		sql CDATA #IMPLIED
+		interval CDATA #IMPLIED
+		description CDATA #IMPLIED>
+			<!ELEMENT property EMPTY>
+			<!ATTLIST property
+				name CDATA #REQUIRED
+				value CDATA #REQUIRED>
+
+	<!ELEMENT sql (#PCDATA , bind* , clob*)>
+	<!ATTLIST sql
+		id ID #REQUIRED
+		paging (true | false) "false"
+		datasource CDATA #REQUIRED
+		srcenc CDATA "UTF-8"
+		trgenc CDATA "UTF-8"
+		description CDATA #IMPLIED>
+			<!ELEMENT bind EMPTY>
+			<!ATTLIST bind
+				type (string | int | date | float | stream) #REQUIRED
+				initval CDATA #IMPLIED
+				dir (in | out | inout) #IMPLIED
+				value CDATA #REQUIRED>
+			<!ELEMENT clob EMPTY>
+			<!ATTLIST clob
+				field CDATA #REQUIRED
+				value CDATA #REQUIRED>
+
+	<!ELEMENT transaction (sqls)+>
+	<!ATTLIST transaction
+		id ID #REQUIRED
+		srcenc CDATA "UTF-8"
+		trgenc CDATA "UTF-8"
+		description CDATA #IMPLIED>
+			<!ELEMENT sqls (param* , return*)>
+			<!ATTLIST sqls
+				sql CDATA #REQUIRED
+				pageindex CDATA #IMPLIED>
+					<!ELEMENT param EMPTY>
+					<!ATTLIST param
+						key CDATA #REQUIRED
+						value CDATA #REQUIRED>
+					<!ELEMENT return EMPTY>
+					<!ATTLIST return
+						key CDATA #REQUIRED
+						field CDATA #REQUIRED>
+
+	<!ELEMENT excel (coltype)*>
+	<!ATTLIST excel
+		id ID #REQUIRED
+		source (EXCEL | DB) #REQUIRED
+		target (EXCEL | DB | DATALIST) #REQUIRED
+		path CDATA #REQUIRED
+		transaction CDATA #IMPLIED
+		index CDATA #IMPLIED
+		start CDATA #IMPLIED
+		srcenc CDATA "UTF-8"
+		trgenc CDATA "UTF-8"
+		description CDATA #IMPLIED>
+			<!ELEMENT coltype EMPTY>
+			<!ATTLIST coltype
+				value CDATA #REQUIRED>
+
+	<!ELEMENT mail (from , to , content , #PCDATA)>
+	<!ATTLIST mail
+		id ID #REQUIRED
+		thread (true | false) #REQUIRED
+		smtp CDATA #REQUIRED
+		debug (true | false) "false"
+		charset CDATA "UTF-8"
+		description CDATA #IMPLIED>
+			<!ELEMENT from EMPTY>
+			<!ATTLIST from
+				userid CDATA #REQUIRED
+				passwd CDATA #REQUIRED
+				denote CDATA #IMPLIED
+				email CDATA #REQUIRED>
+			<!ELEMENT to EMPTY>
+			<!ATTLIST to
+				email CDATA #REQUIRED
+				name CDATA #IMPLIED
+				cc CDATA #IMPLIED
+				bcc CDATA #IMPLIED>
+			<!ELEMENT content EMPTY>
+			<!ATTLIST content
+				subject CDATA #REQUIRED
+				type (HTML | TEXT) #REQUIRED>
+
+	<!ELEMENT servlet EMPTY>
+	<!ATTLIST servlet
+		id ID #REQUIRED
+		classname CDATA #REQUIRED
+		method CDATA #REQUIRED
+		upload CDATA #IMPLIED
+		after (true | false) "false"
+		before (true | false) "false"
+		description CDATA #IMPLIED>
+
+	<!ELEMENT upload EMPTY>
+	<!ATTLIST upload
+		id ID #REQUIRED
+		dir CDATA #REQUIRED
+		size CDATA #REQUIRED
+		accept CDATA #IMPLIED
+		deny CDATA #IMPLIED
+		description CDATA #IMPLIED>
